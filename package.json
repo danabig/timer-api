@@ -1,0 +1,35 @@
+{
+  "name": "timer-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node -r esm ./bin/www",
+    "start:dev": "nodemon -r esm ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danabig/timer-api.git"
+  },
+  "author": "danabig",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danabig/timer-api/issues"
+  },
+  "homepage": "https://github.com/danabig/timer-api#readme",
+  "dependencies": {
+    "@godaddy/terminus": "^4.9.0",
+    "bunyan": "^1.8.15",
+    "bunyan-middleware": "^1.0.1",
+    "convict": "^5.2.1",
+    "convict-format-with-validator": "^6.2.0",
+    "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "mongodb": "^4.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}

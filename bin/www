@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+import { app } from '../app'
+// const debug = require('debug')('api:server')
+import http from 'http'
+import { createTerminus, HealthCheckError } from '@godaddy/terminus'
+import { config } from '../src/helpers/config'
+import { logger } from '../src/helpers/logger'
+import { mongoClient } from '../src/db/mongo/client'
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(config.get('port'))
+app.set('port', port)
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app)
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+const terminusOptions = {
+  // health check options
+  healthChecks: {
+    "/_health/liveness": livenessCheck, // a function returning a promise indicating service health, so the Kubernetes knows if it should restart the pod
+    "/_health/readiness": readinessCheck, // a function returning a promise indicating service health, so the Kubernetes knows if it can route traffic to the pod
+    verbatim: true // [optional = false] use object returned from /healthcheck verbatim in response
+  },
+
+  // cleanup options
+  timeout: 1000,                   // [optional = 1000] number of milliseconds before forceful exiting
+  onSignal,                        // [optional] cleanup function, returning a promise (used to be onSigterm)
+  onShutdown,                      // [optional] called right before exiting
+  beforeShutdown,
+
+  logger: (message, error) => {
+    logger.error(new HealthCheckError(message, error))
+  },
+}
+
+createTerminus(server, terminusOptions)
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      logger.error(bind + ' requires elevated privileges');
+      process.exit(1);
+    case 'EADDRINUSE':
+      logger.error(bind + ' is already in use');
+      process.exit(1);
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+async function onListening() {
+  const addr = server.address()
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+    logger.info('Listening on ' + bind);
+  await mongoClient.connect()
+}
+
+function onSignal () {
+  console.log('server is starting cleanup');
+  return Promise.all([
+    // your clean logic, like closing database connections
+  ]);
+}
+
+async function onShutdown () {
+  await client.close()
+  console.log('cleanup finished, server is shutting down')
+}
+
+function livenessCheck () {
+  return Promise.resolve()
+}
+
+function readinessCheck () {
+  return Promise.resolve()
+}
+
+function beforeShutdown () {
+  console.log('before shutting down')
+  // TODO: timing issues that should be taken care of such as setting the timeout big enough 
+  // comparing the interval of the readiness probe. It should be anyway shorter than the kubernetes 
+  // shutdown timeout (which is 30 seconds by default)
+  return
+}
