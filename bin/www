@@ -10,7 +10,8 @@ import http from 'http'
 import { createTerminus, HealthCheckError } from '@godaddy/terminus'
 import { config } from '../src/helpers/config'
 import { logger } from '../src/helpers/logger'
-import { mongoClient } from '../src/db/mongo/client'
+import { dbController } from '../src/db/mongo/controller'
+import { syncExistingTimers } from '../src/helpers/scheduler'
 
 /**
  * Get port from environment and store in Express.
@@ -110,7 +111,9 @@ async function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
     logger.info('Listening on ' + bind);
-  await mongoClient.connect()
+  await dbController.init()
+  const existingTimers = await dbController.getExistingTimers()
+  await syncExistingTimers(existingTimers)
 }
 
 function onSignal () {
@@ -121,7 +124,7 @@ function onSignal () {
 }
 
 async function onShutdown () {
-  await client.close()
+  await dbController.destroyConnection()
   console.log('cleanup finished, server is shutting down')
 }
 

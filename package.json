@@ -19,6 +19,7 @@
   "homepage": "https://github.com/danabig/timer-api#readme",
   "dependencies": {
     "@godaddy/terminus": "^4.9.0",
+    "axios": "^0.21.1",
     "bunyan": "^1.8.15",
     "bunyan-middleware": "^1.0.1",
     "convict": "^5.2.1",
