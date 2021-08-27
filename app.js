@@ -7,7 +7,7 @@ export const app = express()
 app.use(express.json())
 app.use(helmet())
 setupMiddleware(app)
-app.use('/timer', timerRouter)
+app.use('/timers', timerRouter)
 
 // Catch all just in case (although nothing should get here)
 app.get('*', (req, res) => {

@@ -27,7 +27,8 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
-    "mongodb": "^4.1.1"
+    "mongodb": "^4.1.1",
+    "node-schedule": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
