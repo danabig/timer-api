@@ -13,13 +13,12 @@ timerRouter.post('/', async (req, res) => {
   payload.triggered = false
   const newTimerAck = await dbController.addTimer(payload)
   scheduleTimerJob(payload, (payload) => sendWebhook(payload))
-  debugger
   res.status(201).send({ id: payload._id })
 })
 
 timerRouter.get('/:timerId', async (req, res) => {
   const { timerId } = req.params
-  const timer = await dbController.getTimer(timerId)
+  const timer = await dbController.getTimer(parseInt(timerId))
   const timeLeftSeconds = getTimeLeftSeconds(timer)
   res.status(200).send({ id: timer._id, time_left: Math.max(timeLeftSeconds, 0) })
 })

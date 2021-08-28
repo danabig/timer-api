@@ -5,7 +5,7 @@ tags:
 info:
   title: timer-api
   version: '1.0'
-  description: 'timer api description' 
+  description: timer api description
   contact:
     name: Dan
     email: dan.abig@gmail.com
@@ -58,6 +58,30 @@ paths:
         description: Timer details are expected
       parameters: []
     parameters: []
+  '/timers/{timer_id}':
+    parameters:
+      - schema:
+          type: string
+        name: timer_id
+        in: path
+        required: true
+        description: The timer di to get
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  time_left:
+                    type: integer
+      operationId: get-timers-timer_id
 components:
   schemas: {}
   securitySchemes:

@@ -30,7 +30,7 @@ export const syncExistingTimers = (existingTimers) => {
   console.log(`synching timers`)
   existingTimers.forEach((timer) => {
     console.log(`synching timer ${timer._id}`)
-    scheduleTimerJob(timer, (timer) => sendWebhook(timer))
+    scheduleTimerJob(timer, () => sendWebhook(timer))
   })
 }
 
