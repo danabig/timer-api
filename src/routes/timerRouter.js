@@ -13,6 +13,7 @@ timerRouter.post('/', async (req, res) => {
   payload.triggered = false
   const newTimerAck = await dbController.addTimer(payload)
   scheduleTimerJob(payload, (payload) => sendWebhook(payload))
+  debugger
   res.status(201).send({ id: payload._id })
 })
 

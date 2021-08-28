@@ -1,0 +1,68 @@
+openapi: 3.0.0
+tags:
+  - name: timer-api
+    description: timer-api operations
+info:
+  title: timer-api
+  version: '1.0'
+  description: 'timer api description' 
+  contact:
+    name: Dan
+    email: dan.abig@gmail.com
+servers: []
+paths:
+  /timers:
+    post:
+      summary: Create new timer
+      operationId: post-timers
+      responses:
+        '201':
+          description: Timer created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+              examples: {}
+          headers: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+      description: Create a new timer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hours:
+                  type: integer
+                minutes:
+                  type: integer
+                seconds:
+                  type: integer
+                url:
+                  type: string
+            examples:
+              example-1:
+                value:
+                  hours: 4
+                  minutes: 0
+                  seconds: 1
+                  url: 'https://someserver.com'
+        description: Timer details are expected
+      parameters: []
+    parameters: []
+components:
+  schemas: {}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: ''
