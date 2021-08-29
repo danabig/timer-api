@@ -8,8 +8,11 @@ export const getScheduledDate = (timer) => {
 }
 
 export const scheduleTimerJob = (timer, task) => {
+
   const timeLeftSeconds = getTimeLeftSeconds(timer)
+
   if (timeLeftSeconds > 0) {
+    
     const scheduledDate = getScheduledDate(timer)
     schedule.scheduleJob(scheduledDate, () => {
       console.log(`Timer ${timer._id} is activated`)
@@ -17,12 +20,15 @@ export const scheduleTimerJob = (timer, task) => {
       handleTrigger(timer)
     })
     console.log(`${timer._id} is set`)
+
   } else {
-    console.log(`${timer._id} should be immediatly invoked`)
+
+    console.log(`${timer._id} past the time and should be immediatly invoked`)
     setTimeout(() => {
       task()
       handleTrigger(timer)
     }, 0)
+
   }
 }
 
